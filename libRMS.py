@@ -1,4 +1,4 @@
-#FILTER TERBARU
+#EMG FILTER 
 import scipy.signal
 from scipy import signal
 import numpy as np
@@ -33,8 +33,8 @@ class EmgCollector(myo.DeviceListener):
             self.emg_data_queue.append((event.timestamp, event.emg))
 
 
-#PROSES SEMUA DATA
-#SEMUA PARAMETER
+
+#PARAMETER for FILTER
 pole = 5
 lowcut = 10.0
 highcut = 80.0
@@ -42,11 +42,12 @@ samp_freq = 200
 notch_freq = 50
 quality_factor = 90
 
+#PARAMETER for SLIDING WINDOW
 window = 40
 step = 5
 
 
-#RUMUS filter
+#FILTER DEFINITION
 import scipy
 from scipy.signal import butter, lfilter
 from scipy import signal
@@ -58,13 +59,7 @@ def filters (chanel,pole,low,high,fs):
     dframe = pd.DataFrame(df)
     return dframe
 
-
-
-
-# datafilter1 = filters(emg,pole,lowcut, highcut,fs=samp_freq)
-
-
-#RUMUS WINDOW + RMS
+#SLIDING WINDOW DEFINITION + EXTRACTION FEATURE
 from numpy.lib.stride_tricks import as_strided
 import math
 from scipy import stats
@@ -81,7 +76,7 @@ def feature_rms(series, window, step):
     windows_strided, indexes = moving_window_stride(series.values, window, step)
     return pd.Series(data=np.sqrt(np.mean(np.square(windows_strided), axis=1)), index=series.index[indexes]) 
  
-
+#EXECUTE ALL DEFINITION OF PROCESSING IN "PREP"
 def prep(dat_emg):
     
     datafilter1 = filters(dat_emg,pole,lowcut, highcut,fs=samp_freq)
