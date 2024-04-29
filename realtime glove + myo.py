@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from collections import deque
 import myo
 from threading import Lock, Thread
-from libRMS import *
+from libRMS import * #library created specifically for EMG signal processing
 import joblib
 
 # --------------------------------------------------------------------------------------
